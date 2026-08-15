@@ -22,6 +22,7 @@ import {
   type EnvironmentScope,
   type EnvSnippet,
   type HiddenProviderCommands,
+  normalizeSuggestedPrompts,
   type ProviderConfigMap,
   type StoredChatModelSelection,
 } from '../../core/types/settings';
@@ -382,6 +383,7 @@ export class ClaudianSettingsStorage {
     );
     const envSnippets = normalizeEnvSnippets(stored.envSnippets);
     const customModelAliases = normalizeModelAliases(stored.customModelAliases);
+    const suggestedPrompts = normalizeSuggestedPrompts(stored.suggestedPrompts);
     const {
       changed: didStripRuntimeProviderConfig,
       providerConfigs,
@@ -408,6 +410,7 @@ export class ClaudianSettingsStorage {
       envSnippets,
       customModelAliases,
       hiddenProviderCommands,
+      suggestedPrompts,
       providerConfigs,
       chatViewPlacement,
       enableDualPane,
@@ -457,6 +460,7 @@ export class ClaudianSettingsStorage {
         'customModelAliases' in stored
         && JSON.stringify(customModelAliases) !== JSON.stringify(stored.customModelAliases ?? {})
       )
+      || JSON.stringify(suggestedPrompts) !== JSON.stringify(stored.suggestedPrompts ?? [])
       || didNormalizeProviderSettings
       || didStripRuntimeProviderConfig
       || didNormalizeHostScopedProviderConfigs

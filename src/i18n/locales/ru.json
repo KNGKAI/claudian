@@ -400,9 +400,40 @@
       }
     },
     "agentSkills": {
-      "sectionTitle": "Skills", "fixedRoot": "Managed in .agents/skills", "sharedExpectation": "Manage shared skills in .agents/skills/ for compatible providers.", "noSkills": "No shared skills configured. Click + to create one.", "skillBadge": "skill", "diagnosticsTitle": "Skills needing attention", "loadFailed": "Could not load shared skills.", "savedRefreshFailed": "Saved, but provider refresh failed.", "validationFailed": "Invalid skill: {message}", "collisionFailed": "A skill named \"{name}\" already exists.", "saveFailed": "Failed to save shared skill: {message}", "deleteFailed": "Failed to move shared skill to trash: {message}", "staleConflict": "This skill changed elsewhere; refresh before saving.", "created": "Shared skill \"{name}\" created.", "updated": "Shared skill \"{name}\" updated.", "deleted": "Shared skill \"{name}\" moved to trash.",
-      "modal": { "titleEdit": "Edit Shared Skill", "titleAdd": "Add Shared Skill", "name": "Skill name", "nameDesc": "Lowercase letters and numbers separated by single hyphens", "namePlaceholder": "code-reviewer", "description": "Description", "descriptionDesc": "Required portable description used by providers to select the skill", "descriptionPlaceholder": "Reviews code for correctness and maintainability", "instructions": "Instructions", "instructionsDesc": "Required SKILL.md instructions", "instructionsPlaceholder": "Review the supplied code and report actionable findings..." },
-      "delete": { "title": "Delete Shared Skill", "description": "The entire skill folder, including scripts, references, and assets, will be moved to trash.", "confirm": "Move to trash" }
+      "sectionTitle": "Skills",
+      "fixedRoot": "Managed in .agents/skills",
+      "sharedExpectation": "Manage shared skills in .agents/skills/ for compatible providers.",
+      "noSkills": "No shared skills configured. Click + to create one.",
+      "skillBadge": "skill",
+      "diagnosticsTitle": "Skills needing attention",
+      "loadFailed": "Could not load shared skills.",
+      "savedRefreshFailed": "Saved, but provider refresh failed.",
+      "validationFailed": "Invalid skill: {message}",
+      "collisionFailed": "A skill named \"{name}\" already exists.",
+      "saveFailed": "Failed to save shared skill: {message}",
+      "deleteFailed": "Failed to move shared skill to trash: {message}",
+      "staleConflict": "This skill changed elsewhere; refresh before saving.",
+      "created": "Shared skill \"{name}\" created.",
+      "updated": "Shared skill \"{name}\" updated.",
+      "deleted": "Shared skill \"{name}\" moved to trash.",
+      "modal": {
+        "titleEdit": "Edit Shared Skill",
+        "titleAdd": "Add Shared Skill",
+        "name": "Skill name",
+        "nameDesc": "Lowercase letters and numbers separated by single hyphens",
+        "namePlaceholder": "code-reviewer",
+        "description": "Description",
+        "descriptionDesc": "Required portable description used by providers to select the skill",
+        "descriptionPlaceholder": "Reviews code for correctness and maintainability",
+        "instructions": "Instructions",
+        "instructionsDesc": "Required SKILL.md instructions",
+        "instructionsPlaceholder": "Review the supplied code and report actionable findings..."
+      },
+      "delete": {
+        "title": "Delete Shared Skill",
+        "description": "The entire skill folder, including scripts, references, and assets, will be moved to trash.",
+        "confirm": "Move to trash"
+      }
     },
     "codexSkills": {
       "modal": {
@@ -473,6 +504,27 @@
       },
       "header": "Субагенты Codex",
       "noAgents": "В vault нет субагентов Codex. Нажмите +, чтобы создать одного."
+    },
+    "suggestedPrompts": {
+      "heading": "Предлагаемые подсказки",
+      "name": "Предлагаемые подсказки",
+      "addBtn": "Добавить подсказку",
+      "noPrompts": "Пока нет предлагаемых подсказок. Нажмите +, чтобы добавить одну.",
+      "labelRequired": "Введите метку для подсказки.",
+      "promptRequired": "Введите текст подсказки для отправки.",
+      "deleteConfirm": "Удалить предлагаемую подсказку \"{label}\"?",
+      "deleteFailed": "Не удалось удалить предлагаемую подсказку.",
+      "added": "Предлагаемая подсказка \"{label}\" добавлена.",
+      "updated": "Предлагаемая подсказка \"{label}\" обновлена.",
+      "deleted": "Предлагаемая подсказка \"{label}\" удалена.",
+      "modal": {
+        "titleEdit": "Редактировать предлагаемую подсказку",
+        "titleAdd": "Добавить предлагаемую подсказку",
+        "label": "Метка",
+        "labelDesc": "Короткая метка, отображаемая на чипе в редакторе.",
+        "promptDesc": "Полное сообщение, отправляемое в чат при нажатии на чип.",
+        "prompt": "Подсказка"
+      }
     }
   }
 }

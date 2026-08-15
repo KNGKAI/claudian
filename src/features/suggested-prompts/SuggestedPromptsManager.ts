@@ -1,38 +1,16 @@
 import type { App } from 'obsidian';
 import { Modal, Notice, setIcon, Setting } from 'obsidian';
 
-import type { FeatureHost } from '../FeatureHost';
-import type { SuggestedPrompt } from '../../core/types/settings';
+import { normalizeSuggestedPrompts, type SuggestedPrompt } from '../../core/types/settings';
 import { t } from '../../i18n/i18n';
 import { confirmDelete } from '../../shared/modals/ConfirmModal';
+import type { FeatureHost } from '../FeatureHost';
 
 function createSuggestedPromptId(): string {
   return `prompt-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
 }
 
-export function normalizeSuggestedPrompts(value: unknown): SuggestedPrompt[] {
-  if (!Array.isArray(value)) {
-    return [];
-  }
-
-  const prompts: SuggestedPrompt[] = [];
-  for (const item of value) {
-    if (!item || typeof item !== 'object' || Array.isArray(item)) {
-      continue;
-    }
-
-    const candidate = item as Record<string, unknown>;
-    const id = typeof candidate.id === 'string' ? candidate.id.trim() : '';
-    const label = typeof candidate.label === 'string' ? candidate.label.trim() : '';
-    const prompt = typeof candidate.prompt === 'string' ? candidate.prompt.trim() : '';
-
-    if (id && label && prompt) {
-      prompts.push({ id, label, prompt });
-    }
-  }
-
-  return prompts;
-}
+export { normalizeSuggestedPrompts };
 
 class SuggestedPromptModal extends Modal {
   private plugin: FeatureHost;

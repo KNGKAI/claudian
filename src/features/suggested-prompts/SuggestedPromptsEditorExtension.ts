@@ -1,15 +1,16 @@
 import { type Extension } from '@codemirror/state';
+import type {
+  EditorView,
+  WidgetType} from '@codemirror/view';
 import {
   Decoration,
   type DecorationSet,
-  EditorView,
   ViewPlugin,
-  type ViewUpdate,
-  WidgetType,
+  type ViewUpdate
 } from '@codemirror/view';
 
 import type { SuggestedPrompt } from '../../core/types/settings';
-import { SuggestedPromptsWidget, type SuggestedPromptClickHandler } from './SuggestedPromptsWidget';
+import { type SuggestedPromptClickHandler,SuggestedPromptsWidget } from './SuggestedPromptsWidget';
 
 const SHOW_SUGGESTED_PROMPTS_CLASS = 'claudian-suggested-prompts-visible';
 

@@ -170,6 +170,7 @@ describe('ClaudianPlugin', () => {
       expect(plugin.settings).toBeDefined();
       expect(plugin.settings.permissionMode).toBe(DEFAULT_SETTINGS.permissionMode);
       expect(plugin.settings.hiddenProviderCommands).toEqual(DEFAULT_SETTINGS.hiddenProviderCommands);
+      expect(plugin.settings.suggestedPrompts).toEqual(DEFAULT_SETTINGS.suggestedPrompts);
     });
 
     // Note: With multi-tab, agentService is per-tab via TabManager, not on plugin
@@ -1359,6 +1360,29 @@ describe('ClaudianPlugin', () => {
       await plugin.loadSettings();
 
       expect(plugin.settings).toEqual(DEFAULT_SETTINGS);
+    });
+
+    it('should normalize suggested prompts from stored data', async () => {
+      mockApp.vault.adapter.exists.mockImplementation(async (path: string) => (
+        path === '.claudian/claudian-settings.json'
+      ));
+      mockApp.vault.adapter.read.mockImplementation(async (path: string) => {
+        if (path === '.claudian/claudian-settings.json') {
+          return JSON.stringify({
+            suggestedPrompts: [
+              { id: 'valid', label: 'Valid', prompt: 'Prompt' },
+              { id: 'invalid', label: '', prompt: 'Missing label' },
+            ],
+          });
+        }
+        return '';
+      });
+
+      await plugin.loadSettings();
+
+      expect(plugin.settings.suggestedPrompts).toEqual([
+        { id: 'valid', label: 'Valid', prompt: 'Prompt' },
+      ]);
     });
 
     it('should migrate legacy openInMainTab true to main-tab placement', async () => {

@@ -400,9 +400,40 @@
       }
     },
     "agentSkills": {
-      "sectionTitle": "Skills", "fixedRoot": "Managed in .agents/skills", "sharedExpectation": "Manage shared skills in .agents/skills/ for compatible providers.", "noSkills": "No shared skills configured. Click + to create one.", "skillBadge": "skill", "diagnosticsTitle": "Skills needing attention", "loadFailed": "Could not load shared skills.", "savedRefreshFailed": "Saved, but provider refresh failed.", "validationFailed": "Invalid skill: {message}", "collisionFailed": "A skill named \"{name}\" already exists.", "saveFailed": "Failed to save shared skill: {message}", "deleteFailed": "Failed to move shared skill to trash: {message}", "staleConflict": "This skill changed elsewhere; refresh before saving.", "created": "Shared skill \"{name}\" created.", "updated": "Shared skill \"{name}\" updated.", "deleted": "Shared skill \"{name}\" moved to trash.",
-      "modal": { "titleEdit": "Edit Shared Skill", "titleAdd": "Add Shared Skill", "name": "Skill name", "nameDesc": "Lowercase letters and numbers separated by single hyphens", "namePlaceholder": "code-reviewer", "description": "Description", "descriptionDesc": "Required portable description used by providers to select the skill", "descriptionPlaceholder": "Reviews code for correctness and maintainability", "instructions": "Instructions", "instructionsDesc": "Required SKILL.md instructions", "instructionsPlaceholder": "Review the supplied code and report actionable findings..." },
-      "delete": { "title": "Delete Shared Skill", "description": "The entire skill folder, including scripts, references, and assets, will be moved to trash.", "confirm": "Move to trash" }
+      "sectionTitle": "Skills",
+      "fixedRoot": "Managed in .agents/skills",
+      "sharedExpectation": "Manage shared skills in .agents/skills/ for compatible providers.",
+      "noSkills": "No shared skills configured. Click + to create one.",
+      "skillBadge": "skill",
+      "diagnosticsTitle": "Skills needing attention",
+      "loadFailed": "Could not load shared skills.",
+      "savedRefreshFailed": "Saved, but provider refresh failed.",
+      "validationFailed": "Invalid skill: {message}",
+      "collisionFailed": "A skill named \"{name}\" already exists.",
+      "saveFailed": "Failed to save shared skill: {message}",
+      "deleteFailed": "Failed to move shared skill to trash: {message}",
+      "staleConflict": "This skill changed elsewhere; refresh before saving.",
+      "created": "Shared skill \"{name}\" created.",
+      "updated": "Shared skill \"{name}\" updated.",
+      "deleted": "Shared skill \"{name}\" moved to trash.",
+      "modal": {
+        "titleEdit": "Edit Shared Skill",
+        "titleAdd": "Add Shared Skill",
+        "name": "Skill name",
+        "nameDesc": "Lowercase letters and numbers separated by single hyphens",
+        "namePlaceholder": "code-reviewer",
+        "description": "Description",
+        "descriptionDesc": "Required portable description used by providers to select the skill",
+        "descriptionPlaceholder": "Reviews code for correctness and maintainability",
+        "instructions": "Instructions",
+        "instructionsDesc": "Required SKILL.md instructions",
+        "instructionsPlaceholder": "Review the supplied code and report actionable findings..."
+      },
+      "delete": {
+        "title": "Delete Shared Skill",
+        "description": "The entire skill folder, including scripts, references, and assets, will be moved to trash.",
+        "confirm": "Move to trash"
+      }
     },
     "codexSkills": {
       "modal": {
@@ -473,6 +504,27 @@
       },
       "header": "Codex 하위 에이전트",
       "noAgents": "Vault에 Codex 하위 에이전트가 없습니다. +를 클릭해 만드세요."
+    },
+    "suggestedPrompts": {
+      "heading": "제안 프롬프트",
+      "name": "제안 프롬프트",
+      "addBtn": "프롬프트 추가",
+      "noPrompts": "아직 제안된 프롬프트가 없습니다. +를 클릭하여 추가하세요.",
+      "labelRequired": "프롬프트의 레이블을 입력하세요.",
+      "promptRequired": "전송할 프롬프트 텍스트를 입력하세요.",
+      "deleteConfirm": "제안 프롬프트 \"{label}\"을(를) 삭제하시겠습니까?",
+      "deleteFailed": "제안 프롬프트 삭제에 실패했습니다.",
+      "added": "제안 프롬프트 \"{label}\"이(가) 추가되었습니다.",
+      "updated": "제안 프롬프트 \"{label}\"이(가) 업데이트되었습니다.",
+      "deleted": "제안 프롬프트 \"{label}\"이(가) 삭제되었습니다.",
+      "modal": {
+        "titleEdit": "제안 프롬프트 편집",
+        "titleAdd": "제안 프롬프트 추가",
+        "label": "레이블",
+        "labelDesc": "편집기의 칩에 표시되는 짧은 레이블입니다.",
+        "promptDesc": "칩을 클릭하면 채팅으로 전송되는 전체 메시지입니다.",
+        "prompt": "프롬프트"
+      }
     }
   }
 }

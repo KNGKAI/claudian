@@ -15,13 +15,13 @@ export class SuggestedPromptsWidget extends WidgetType {
   }
 
   toDOM(): HTMLElement {
-    const container = document.createElement('div');
+    const container = createDiv();
     container.className = 'claudian-suggested-prompts-chip-strip';
     container.setAttribute('role', 'list');
     container.setAttribute('aria-label', 'Suggested prompts');
 
     for (const prompt of this.prompts) {
-      const chip = document.createElement('button');
+      const chip = createEl('button');
       chip.className = 'claudian-suggested-prompts-chip';
       chip.type = 'button';
       chip.textContent = prompt.label;

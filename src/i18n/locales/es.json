@@ -400,9 +400,40 @@
       }
     },
     "agentSkills": {
-      "sectionTitle": "Skills", "fixedRoot": "Managed in .agents/skills", "sharedExpectation": "Manage shared skills in .agents/skills/ for compatible providers.", "noSkills": "No shared skills configured. Click + to create one.", "skillBadge": "skill", "diagnosticsTitle": "Skills needing attention", "loadFailed": "Could not load shared skills.", "savedRefreshFailed": "Saved, but provider refresh failed.", "validationFailed": "Invalid skill: {message}", "collisionFailed": "A skill named \"{name}\" already exists.", "saveFailed": "Failed to save shared skill: {message}", "deleteFailed": "Failed to move shared skill to trash: {message}", "staleConflict": "This skill changed elsewhere; refresh before saving.", "created": "Shared skill \"{name}\" created.", "updated": "Shared skill \"{name}\" updated.", "deleted": "Shared skill \"{name}\" moved to trash.",
-      "modal": { "titleEdit": "Edit Shared Skill", "titleAdd": "Add Shared Skill", "name": "Skill name", "nameDesc": "Lowercase letters and numbers separated by single hyphens", "namePlaceholder": "code-reviewer", "description": "Description", "descriptionDesc": "Required portable description used by providers to select the skill", "descriptionPlaceholder": "Reviews code for correctness and maintainability", "instructions": "Instructions", "instructionsDesc": "Required SKILL.md instructions", "instructionsPlaceholder": "Review the supplied code and report actionable findings..." },
-      "delete": { "title": "Delete Shared Skill", "description": "The entire skill folder, including scripts, references, and assets, will be moved to trash.", "confirm": "Move to trash" }
+      "sectionTitle": "Skills",
+      "fixedRoot": "Managed in .agents/skills",
+      "sharedExpectation": "Manage shared skills in .agents/skills/ for compatible providers.",
+      "noSkills": "No shared skills configured. Click + to create one.",
+      "skillBadge": "skill",
+      "diagnosticsTitle": "Skills needing attention",
+      "loadFailed": "Could not load shared skills.",
+      "savedRefreshFailed": "Saved, but provider refresh failed.",
+      "validationFailed": "Invalid skill: {message}",
+      "collisionFailed": "A skill named \"{name}\" already exists.",
+      "saveFailed": "Failed to save shared skill: {message}",
+      "deleteFailed": "Failed to move shared skill to trash: {message}",
+      "staleConflict": "This skill changed elsewhere; refresh before saving.",
+      "created": "Shared skill \"{name}\" created.",
+      "updated": "Shared skill \"{name}\" updated.",
+      "deleted": "Shared skill \"{name}\" moved to trash.",
+      "modal": {
+        "titleEdit": "Edit Shared Skill",
+        "titleAdd": "Add Shared Skill",
+        "name": "Skill name",
+        "nameDesc": "Lowercase letters and numbers separated by single hyphens",
+        "namePlaceholder": "code-reviewer",
+        "description": "Description",
+        "descriptionDesc": "Required portable description used by providers to select the skill",
+        "descriptionPlaceholder": "Reviews code for correctness and maintainability",
+        "instructions": "Instructions",
+        "instructionsDesc": "Required SKILL.md instructions",
+        "instructionsPlaceholder": "Review the supplied code and report actionable findings..."
+      },
+      "delete": {
+        "title": "Delete Shared Skill",
+        "description": "The entire skill folder, including scripts, references, and assets, will be moved to trash.",
+        "confirm": "Move to trash"
+      }
     },
     "codexSkills": {
       "modal": {
@@ -473,6 +504,27 @@
       },
       "header": "Subagentes de Codex",
       "noAgents": "No hay subagentes Codex en el vault. Haz clic en + para crear uno."
+    },
+    "suggestedPrompts": {
+      "heading": "Sugerencias de indicaciones",
+      "name": "Sugerencias de indicaciones",
+      "addBtn": "Añadir indicación",
+      "noPrompts": "Aún no hay indicaciones sugeridas. Haz clic en + para añadir una.",
+      "labelRequired": "Introduce una etiqueta para la indicación.",
+      "promptRequired": "Introduce el texto de la indicación que se enviará.",
+      "deleteConfirm": "¿Eliminar la indicación sugerida \"{label}\"?",
+      "deleteFailed": "No se pudo eliminar la indicación sugerida.",
+      "added": "Indicación sugerida \"{label}\" añadida.",
+      "updated": "Indicación sugerida \"{label}\" actualizada.",
+      "deleted": "Indicación sugerida \"{label}\" eliminada.",
+      "modal": {
+        "titleEdit": "Editar indicación sugerida",
+        "titleAdd": "Añadir indicación sugerida",
+        "label": "Etiqueta",
+        "labelDesc": "Etiqueta breve que se muestra en el chip del editor.",
+        "promptDesc": "El mensaje completo que se envía al chat al hacer clic en el chip.",
+        "prompt": "Indicación"
+      }
     }
   }
 }

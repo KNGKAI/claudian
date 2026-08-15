@@ -400,9 +400,40 @@
       }
     },
     "agentSkills": {
-      "sectionTitle": "Skills", "fixedRoot": "Managed in .agents/skills", "sharedExpectation": "Manage shared skills in .agents/skills/ for compatible providers.", "noSkills": "No shared skills configured. Click + to create one.", "skillBadge": "skill", "diagnosticsTitle": "Skills needing attention", "loadFailed": "Could not load shared skills.", "savedRefreshFailed": "Saved, but provider refresh failed.", "validationFailed": "Invalid skill: {message}", "collisionFailed": "A skill named \"{name}\" already exists.", "saveFailed": "Failed to save shared skill: {message}", "deleteFailed": "Failed to move shared skill to trash: {message}", "staleConflict": "This skill changed elsewhere; refresh before saving.", "created": "Shared skill \"{name}\" created.", "updated": "Shared skill \"{name}\" updated.", "deleted": "Shared skill \"{name}\" moved to trash.",
-      "modal": { "titleEdit": "Edit Shared Skill", "titleAdd": "Add Shared Skill", "name": "Skill name", "nameDesc": "Lowercase letters and numbers separated by single hyphens", "namePlaceholder": "code-reviewer", "description": "Description", "descriptionDesc": "Required portable description used by providers to select the skill", "descriptionPlaceholder": "Reviews code for correctness and maintainability", "instructions": "Instructions", "instructionsDesc": "Required SKILL.md instructions", "instructionsPlaceholder": "Review the supplied code and report actionable findings..." },
-      "delete": { "title": "Delete Shared Skill", "description": "The entire skill folder, including scripts, references, and assets, will be moved to trash.", "confirm": "Move to trash" }
+      "sectionTitle": "Skills",
+      "fixedRoot": "Managed in .agents/skills",
+      "sharedExpectation": "Manage shared skills in .agents/skills/ for compatible providers.",
+      "noSkills": "No shared skills configured. Click + to create one.",
+      "skillBadge": "skill",
+      "diagnosticsTitle": "Skills needing attention",
+      "loadFailed": "Could not load shared skills.",
+      "savedRefreshFailed": "Saved, but provider refresh failed.",
+      "validationFailed": "Invalid skill: {message}",
+      "collisionFailed": "A skill named \"{name}\" already exists.",
+      "saveFailed": "Failed to save shared skill: {message}",
+      "deleteFailed": "Failed to move shared skill to trash: {message}",
+      "staleConflict": "This skill changed elsewhere; refresh before saving.",
+      "created": "Shared skill \"{name}\" created.",
+      "updated": "Shared skill \"{name}\" updated.",
+      "deleted": "Shared skill \"{name}\" moved to trash.",
+      "modal": {
+        "titleEdit": "Edit Shared Skill",
+        "titleAdd": "Add Shared Skill",
+        "name": "Skill name",
+        "nameDesc": "Lowercase letters and numbers separated by single hyphens",
+        "namePlaceholder": "code-reviewer",
+        "description": "Description",
+        "descriptionDesc": "Required portable description used by providers to select the skill",
+        "descriptionPlaceholder": "Reviews code for correctness and maintainability",
+        "instructions": "Instructions",
+        "instructionsDesc": "Required SKILL.md instructions",
+        "instructionsPlaceholder": "Review the supplied code and report actionable findings..."
+      },
+      "delete": {
+        "title": "Delete Shared Skill",
+        "description": "The entire skill folder, including scripts, references, and assets, will be moved to trash.",
+        "confirm": "Move to trash"
+      }
     },
     "codexSkills": {
       "modal": {
@@ -473,6 +504,27 @@
       },
       "header": "Codex 子代理",
       "noAgents": "Vault 中没有 Codex 子代理。点击 + 创建一个。"
+    },
+    "suggestedPrompts": {
+      "heading": "建议提示词",
+      "name": "建议提示词",
+      "addBtn": "添加提示词",
+      "noPrompts": "还没有建议提示词。点击 + 添加一个。",
+      "labelRequired": "请输入提示词标签。",
+      "promptRequired": "请输入要发送的提示词文本。",
+      "deleteConfirm": "删除建议提示词 \"{label}\"?",
+      "deleteFailed": "删除建议提示词失败。",
+      "added": "已添加建议提示词 \"{label}\"。",
+      "updated": "已更新建议提示词 \"{label}\"。",
+      "deleted": "已删除建议提示词 \"{label}\"。",
+      "modal": {
+        "titleEdit": "编辑建议提示词",
+        "titleAdd": "添加建议提示词",
+        "label": "标签",
+        "labelDesc": "编辑器中显示的简短标签。",
+        "promptDesc": "点击芯片时发送到聊天的完整消息。",
+        "prompt": "提示词"
+      }
     }
   }
 }

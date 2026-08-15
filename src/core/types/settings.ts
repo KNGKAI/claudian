@@ -31,6 +31,30 @@ export interface SuggestedPrompt {
   prompt: string;
 }
 
+export function normalizeSuggestedPrompts(value: unknown): SuggestedPrompt[] {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+
+  const prompts: SuggestedPrompt[] = [];
+  for (const item of value) {
+    if (!item || typeof item !== 'object' || Array.isArray(item)) {
+      continue;
+    }
+
+    const candidate = item as Record<string, unknown>;
+    const id = typeof candidate.id === 'string' ? candidate.id.trim() : '';
+    const label = typeof candidate.label === 'string' ? candidate.label.trim() : '';
+    const prompt = typeof candidate.prompt === 'string' ? candidate.prompt.trim() : '';
+
+    if (id && label && prompt) {
+      prompts.push({ id, label, prompt });
+    }
+  }
+
+  return prompts;
+}
+
 /** Source of a slash command. */
 export type SlashCommandSource = 'builtin' | 'user' | 'plugin' | 'sdk';
 

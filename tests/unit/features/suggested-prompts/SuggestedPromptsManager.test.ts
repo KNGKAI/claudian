@@ -2,7 +2,8 @@
 
 import { createMockEl } from '@test/helpers/MockElement';
 
-import { normalizeSuggestedPrompts, SuggestedPromptsManager } from '@/features/suggested-prompts/SuggestedPromptsManager';
+import { normalizeSuggestedPrompts } from '@/core/types/settings';
+import { SuggestedPromptsManager } from '@/features/suggested-prompts/SuggestedPromptsManager';
 import { t } from '@/i18n/i18n';
 
 jest.mock('@/i18n/i18n', () => ({

@@ -400,9 +400,40 @@
       }
     },
     "agentSkills": {
-      "sectionTitle": "Skills", "fixedRoot": "Managed in .agents/skills", "sharedExpectation": "Manage shared skills in .agents/skills/ for compatible providers.", "noSkills": "No shared skills configured. Click + to create one.", "skillBadge": "skill", "diagnosticsTitle": "Skills needing attention", "loadFailed": "Could not load shared skills.", "savedRefreshFailed": "Saved, but provider refresh failed.", "validationFailed": "Invalid skill: {message}", "collisionFailed": "A skill named \"{name}\" already exists.", "saveFailed": "Failed to save shared skill: {message}", "deleteFailed": "Failed to move shared skill to trash: {message}", "staleConflict": "This skill changed elsewhere; refresh before saving.", "created": "Shared skill \"{name}\" created.", "updated": "Shared skill \"{name}\" updated.", "deleted": "Shared skill \"{name}\" moved to trash.",
-      "modal": { "titleEdit": "Edit Shared Skill", "titleAdd": "Add Shared Skill", "name": "Skill name", "nameDesc": "Lowercase letters and numbers separated by single hyphens", "namePlaceholder": "code-reviewer", "description": "Description", "descriptionDesc": "Required portable description used by providers to select the skill", "descriptionPlaceholder": "Reviews code for correctness and maintainability", "instructions": "Instructions", "instructionsDesc": "Required SKILL.md instructions", "instructionsPlaceholder": "Review the supplied code and report actionable findings..." },
-      "delete": { "title": "Delete Shared Skill", "description": "The entire skill folder, including scripts, references, and assets, will be moved to trash.", "confirm": "Move to trash" }
+      "sectionTitle": "Skills",
+      "fixedRoot": "Managed in .agents/skills",
+      "sharedExpectation": "Manage shared skills in .agents/skills/ for compatible providers.",
+      "noSkills": "No shared skills configured. Click + to create one.",
+      "skillBadge": "skill",
+      "diagnosticsTitle": "Skills needing attention",
+      "loadFailed": "Could not load shared skills.",
+      "savedRefreshFailed": "Saved, but provider refresh failed.",
+      "validationFailed": "Invalid skill: {message}",
+      "collisionFailed": "A skill named \"{name}\" already exists.",
+      "saveFailed": "Failed to save shared skill: {message}",
+      "deleteFailed": "Failed to move shared skill to trash: {message}",
+      "staleConflict": "This skill changed elsewhere; refresh before saving.",
+      "created": "Shared skill \"{name}\" created.",
+      "updated": "Shared skill \"{name}\" updated.",
+      "deleted": "Shared skill \"{name}\" moved to trash.",
+      "modal": {
+        "titleEdit": "Edit Shared Skill",
+        "titleAdd": "Add Shared Skill",
+        "name": "Skill name",
+        "nameDesc": "Lowercase letters and numbers separated by single hyphens",
+        "namePlaceholder": "code-reviewer",
+        "description": "Description",
+        "descriptionDesc": "Required portable description used by providers to select the skill",
+        "descriptionPlaceholder": "Reviews code for correctness and maintainability",
+        "instructions": "Instructions",
+        "instructionsDesc": "Required SKILL.md instructions",
+        "instructionsPlaceholder": "Review the supplied code and report actionable findings..."
+      },
+      "delete": {
+        "title": "Delete Shared Skill",
+        "description": "The entire skill folder, including scripts, references, and assets, will be moved to trash.",
+        "confirm": "Move to trash"
+      }
     },
     "codexSkills": {
       "modal": {
@@ -473,6 +504,27 @@
       },
       "header": "Codex-Sub-Agenten",
       "noAgents": "Keine Codex-Sub-Agenten im Vault. Klicke auf +, um einen zu erstellen."
+    },
+    "suggestedPrompts": {
+      "heading": "Vorgeschlagene Prompts",
+      "name": "Vorgeschlagene Prompts",
+      "addBtn": "Prompt hinzufügen",
+      "noPrompts": "Noch keine vorgeschlagenen Prompts. Klicken Sie auf +, um einen hinzuzufügen.",
+      "labelRequired": "Bitte geben Sie eine Bezeichnung für den Prompt ein.",
+      "promptRequired": "Bitte geben Sie den zu sendenden Prompt-Text ein.",
+      "deleteConfirm": "Vorgeschlagenen Prompt \"{label}\" löschen?",
+      "deleteFailed": "Fehler beim Löschen des vorgeschlagenen Prompts.",
+      "added": "Vorgeschlagener Prompt \"{label}\" hinzugefügt.",
+      "updated": "Vorgeschlagener Prompt \"{label}\" aktualisiert.",
+      "deleted": "Vorgeschlagener Prompt \"{label}\" gelöscht.",
+      "modal": {
+        "titleEdit": "Vorgeschlagenen Prompt bearbeiten",
+        "titleAdd": "Vorgeschlagenen Prompt hinzufügen",
+        "label": "Bezeichnung",
+        "labelDesc": "Kurze Bezeichnung, die auf dem Chip im Editor angezeigt wird.",
+        "promptDesc": "Die vollständige Nachricht, die beim Klicken auf den Chip an den Chat gesendet wird.",
+        "prompt": "Eingabeaufforderung"
+      }
     }
   }
 }
