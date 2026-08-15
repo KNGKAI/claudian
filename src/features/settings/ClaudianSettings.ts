@@ -21,6 +21,7 @@ import {
   MIN_WARM_AGENT_PROCESSES,
 } from '../chat/execution/WarmExecutionPool';
 import type { FeatureHost } from '../FeatureHost';
+import { SuggestedPromptsManager } from '../suggested-prompts/SuggestedPromptsManager';
 import { AgentSkillManagementCoordinator } from './AgentSkillManagementCoordinator';
 import { buildNavMappingText, parseNavMappings } from './keyboardNavigation';
 
@@ -596,6 +597,17 @@ export class ClaudianSettingTab extends PluginSettingTab {
           void commitValue(true);
         });
       });
+
+    // --- Hotkeys ---
+
+    // --- Suggested Prompts ---
+
+    new Setting(container).setName(t('settings.suggestedPrompts.heading')).setHeading();
+
+    const suggestedPromptsContainer = container.createDiv({
+      cls: 'claudian-suggested-prompts-container',
+    });
+    new SuggestedPromptsManager(suggestedPromptsContainer, this.plugin);
 
     // --- Hotkeys ---
 
