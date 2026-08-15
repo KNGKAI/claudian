@@ -24,6 +24,13 @@ export interface EnvSnippet {
   modelAliases?: Record<string, string>;   // Optional: display aliases for custom models
 }
 
+/** A clickable prompt shown in the editor that sends a message to chat. */
+export interface SuggestedPrompt {
+  id: string;
+  label: string;
+  prompt: string;
+}
+
 /** Source of a slash command. */
 export type SlashCommandSource = 'builtin' | 'user' | 'plugin' | 'sdk';
 
@@ -187,6 +194,9 @@ export interface ClaudianSettings {
 
   // Provider command visibility
   hiddenProviderCommands: HiddenProviderCommands;
+
+  // Clickable prompts shown in the editor
+  suggestedPrompts: SuggestedPrompt[];
 
   // Allow provider-specific extension fields
   [key: string]: unknown;

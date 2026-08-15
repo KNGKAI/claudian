@@ -1,7 +1,14 @@
 import { getDefaultHiddenProviderCommands } from '../../core/providers/commands/hiddenCommands';
 import { DEFAULT_REASONING_VALUE } from '../../core/providers/reasoning';
-import { type ClaudianSettings } from '../../core/types/settings';
+import { type ClaudianSettings, type SuggestedPrompt } from '../../core/types/settings';
 import { getBuiltInProviderDefaultConfigs } from '../../providers/defaultProviderConfigs';
+
+const DEFAULT_SUGGESTED_PROMPTS: SuggestedPrompt[] = [
+  { id: 'summarize', label: 'Summarize', prompt: 'Summarize the key points of this note.' },
+  { id: 'improve-writing', label: 'Improve writing', prompt: 'Improve the writing in this note. Keep the meaning and tone intact.' },
+  { id: 'explain-code', label: 'Explain code', prompt: 'Explain what the code in this note does, step by step.' },
+  { id: 'refactor', label: 'Refactor', prompt: 'Refactor the code in this note to be cleaner and easier to maintain.' },
+];
 
 export const DEFAULT_CLAUDIAN_SETTINGS: ClaudianSettings = {
   userName: '',
@@ -61,4 +68,5 @@ export const DEFAULT_CLAUDIAN_SETTINGS: ClaudianSettings = {
   pinnedLinkedNotePaths: [],
 
   hiddenProviderCommands: getDefaultHiddenProviderCommands(),
+  suggestedPrompts: DEFAULT_SUGGESTED_PROMPTS,
 };

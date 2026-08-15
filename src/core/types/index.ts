@@ -40,6 +40,7 @@ export {
   type SessionManagerSort,
   type SlashCommand,
   type StoredChatModelSelection,
+  type SuggestedPrompt,
 } from './settings';
 
 // Diff types

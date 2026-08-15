@@ -131,8 +131,8 @@ describe('types.ts', () => {
           codex: [],
         },
         effortLevel: 'high',
-      settingsProvider: 'claude',
-      lastSelectedChatModel: null,
+        settingsProvider: 'claude',
+        lastSelectedChatModel: null,
         codexEnabled: false,
         savedProviderModel: {},
         savedProviderEffort: {},
@@ -140,6 +140,7 @@ describe('types.ts', () => {
         savedProviderThinkingBudget: {},
         savedProviderPermissionMode: {},
         pendingProviderSessionInvalidations: {},
+        suggestedPrompts: [],
       };
 
       expect(settings.permissionMode).toBe('yolo');
@@ -189,8 +190,8 @@ describe('types.ts', () => {
           codex: [],
         },
         effortLevel: 'high',
-      settingsProvider: 'claude',
-      lastSelectedChatModel: null,
+        settingsProvider: 'claude',
+        lastSelectedChatModel: null,
         codexEnabled: false,
         savedProviderModel: {},
         savedProviderEffort: {},
@@ -198,6 +199,7 @@ describe('types.ts', () => {
         savedProviderThinkingBudget: {},
         savedProviderPermissionMode: {},
         pendingProviderSessionInvalidations: {},
+        suggestedPrompts: [],
       };
 
       expect(settings.model).toBe('anthropic/custom-model-v1');
@@ -248,8 +250,8 @@ describe('types.ts', () => {
           codex: [],
         },
         effortLevel: 'high',
-      settingsProvider: 'claude',
-      lastSelectedChatModel: null,
+        settingsProvider: 'claude',
+        lastSelectedChatModel: null,
         codexEnabled: false,
         savedProviderModel: {},
         savedProviderEffort: {},
@@ -257,6 +259,7 @@ describe('types.ts', () => {
         savedProviderThinkingBudget: {},
         savedProviderPermissionMode: {},
         pendingProviderSessionInvalidations: {},
+        suggestedPrompts: [],
       };
 
       expect(settings.lastClaudeModel).toBe('opus');
