@@ -269,6 +269,27 @@
       "desc": "Append additional Claude model IDs to the picker, one per line. Environment model overrides still replace the picker.",
       "placeholder": "claude-opus-4-6\nclaude-opus-4-5-20251101"
     },
+    "suggestedPrompts": {
+      "heading": "Suggested prompts",
+      "name": "Suggested prompts",
+      "addBtn": "Add prompt",
+      "noPrompts": "No suggested prompts yet. Click + to add one.",
+      "labelRequired": "Please enter a label for the prompt.",
+      "promptRequired": "Please enter the prompt text to send.",
+      "deleteConfirm": "Delete suggested prompt \"{label}\"?",
+      "deleteFailed": "Failed to delete suggested prompt.",
+      "added": "Suggested prompt \"{label}\" added.",
+      "updated": "Suggested prompt \"{label}\" updated.",
+      "deleted": "Suggested prompt \"{label}\" deleted.",
+      "modal": {
+        "titleEdit": "Edit suggested prompt",
+        "titleAdd": "Add suggested prompt",
+        "label": "Label",
+        "labelDesc": "Short label shown on the chip in the editor.",
+        "prompt": "Prompt",
+        "promptDesc": "The full message sent to chat when the chip is clicked."
+      }
+    },
     "enableChrome": {
       "name": "Enable Chrome extension",
       "desc": "Allow Claude to interact with Chrome via the claude-in-chrome extension. Requires the extension to be installed. Requires session restart."

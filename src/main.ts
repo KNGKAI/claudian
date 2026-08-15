@@ -67,6 +67,8 @@ import {
 import { registerFileMenu } from './features/chat/fileMenu';
 import { type InlineEditContext, InlineEditModal } from './features/inline-edit/ui/InlineEditModal';
 import { ClaudianSettingTab } from './features/settings/ClaudianSettings';
+import { buildSuggestedPromptsEditorExtension } from './features/suggested-prompts/SuggestedPromptsEditorExtension';
+import { normalizeSuggestedPrompts } from './features/suggested-prompts/SuggestedPromptsManager';
 import { setLocale } from './i18n/i18n';
 import type { Locale } from './i18n/types';
 import { deleteLegacyMcpConfig } from './providers/claude/storage/LegacyMcpConfigCleanup';
@@ -238,6 +240,15 @@ export default class ClaudianPlugin extends Plugin {
           }
         },
       });
+
+      this.registerEditorExtension(
+        buildSuggestedPromptsEditorExtension({
+          getPrompts: () => normalizeSuggestedPrompts(this.settings.suggestedPrompts),
+          onPromptClick: (prompt) => {
+            void this.sendPromptToActiveChat(prompt.prompt);
+          },
+        })
+      );
 
       this.addCommand({
         id: 'new-tab',
@@ -413,6 +424,36 @@ export default class ClaudianPlugin extends Plugin {
     }
 
     view.focusActiveInput();
+  }
+
+  async sendPromptToActiveChat(prompt: string): Promise<void> {
+    const trimmedPrompt = prompt.trim();
+    if (!trimmedPrompt) {
+      return;
+    }
+
+    await this.activateView();
+    const view = this.getView();
+    if (!view) {
+      new Notice('Claudian chat view is not available.');
+      return;
+    }
+
+    const tab = view.getActiveTab();
+    if (!tab) {
+      new Notice('No active chat tab is available.');
+      return;
+    }
+
+    const inputController = tab.controllers.inputController;
+    if (!inputController) {
+      new Notice('Chat input is not ready.');
+      return;
+    }
+
+    void inputController.sendMessage({ content: trimmedPrompt }).catch(() => {
+      new Notice('Failed to send suggested prompt.');
+    });
   }
 
   async loadSettings(options: { deferNonRestoredSessionMetadata?: boolean } = {}) {
