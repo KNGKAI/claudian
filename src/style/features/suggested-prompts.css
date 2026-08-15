@@ -1,0 +1,133 @@
+/* Suggested prompts chip strip rendered inside the editor */
+.claudian-suggested-prompts-chip-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 6px 0 10px;
+  padding: 0 4px;
+}
+
+.claudian-suggested-prompts-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  font-size: var(--font-ui-small);
+  color: var(--text-muted);
+  background: var(--background-secondary);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: background-color 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.claudian-suggested-prompts-chip:hover {
+  color: var(--text-normal);
+  background: var(--background-modifier-hover);
+  border-color: var(--interactive-accent);
+}
+
+.claudian-suggested-prompts-chip:focus-visible {
+  outline: 2px solid var(--interactive-accent);
+  outline-offset: 2px;
+}
+
+/* Settings manager styles */
+.claudian-suggested-prompts-container {
+  margin-top: 12px;
+}
+
+.claudian-suggested-prompts-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  padding: 0 12px;
+}
+
+.claudian-suggested-prompts-label {
+  font-size: var(--font-ui-small);
+  color: var(--text-muted);
+  font-weight: var(--font-medium);
+}
+
+.claudian-suggested-prompts-empty {
+  font-size: var(--font-ui-small);
+  color: var(--text-muted);
+  padding: 12px;
+}
+
+.claudian-suggested-prompts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.claudian-suggested-prompts-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px;
+  background: var(--background-secondary);
+  border-radius: 6px;
+  transition: background-color 0.2s;
+}
+
+.claudian-suggested-prompts-item:hover {
+  background: var(--background-modifier-hover);
+}
+
+.claudian-suggested-prompts-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  flex: 1;
+}
+
+.claudian-suggested-prompts-item-label {
+  font-size: var(--font-ui-small);
+  color: var(--text-normal);
+  font-weight: var(--font-medium);
+}
+
+.claudian-suggested-prompts-item-preview {
+  font-size: var(--font-ui-smaller);
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.claudian-suggested-prompts-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.claudian-suggested-prompt-modal .claudian-suggested-prompt-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.claudian-suggested-prompt-modal .claudian-cancel-btn,
+.claudian-suggested-prompt-modal .claudian-save-btn {
+  padding: 6px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.claudian-suggested-prompt-modal .claudian-save-btn {
+  background: var(--interactive-accent);
+  color: var(--text-on-accent);
+  border: none;
+}
+
+.claudian-suggested-prompt-modal .claudian-cancel-btn {
+  background: transparent;
+  color: var(--text-normal);
+  border: 1px solid var(--background-modifier-border);
+}
