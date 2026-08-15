@@ -186,4 +186,79 @@ describe('InlineEditSession', () => {
     expect((session as any).isConversing).toBe(false);
     expect(inputEl.placeholder).toContain('provider environment changed');
   });
+
+  it('renders a trusted editor form card and continues the conversation with submitted values', async () => {
+    const { service, session } = createSession();
+    service.editText.mockResolvedValueOnce({
+      formLayout: {
+        title: 'Need more details',
+        submitLabel: 'Continue',
+        sections: [
+          {
+            columns: 2,
+            fields: [
+              { id: 'audience', label: 'Audience', type: 'text', required: true },
+              {
+                id: 'tone',
+                label: 'Tone',
+                type: 'select',
+                options: [{ label: 'Formal', value: 'formal' }],
+              },
+              { id: 'ship', label: 'Ready to ship', type: 'checkbox' },
+            ],
+          },
+        ],
+      },
+      success: true,
+    });
+    service.continueConversation.mockResolvedValueOnce({
+      editedText: 'world',
+      success: true,
+    });
+
+    const inputEl = document.createElement('input');
+    inputEl.value = 'rewrite';
+    inputEl.focus = jest.fn();
+    const spinnerEl = createMockEl();
+    const containerEl = document.createElement('div');
+    const inputWrapEl = document.createElement('div');
+    const agentReplyEl = document.createElement('div');
+    const formHostEl = document.createElement('div');
+    containerEl.append(inputWrapEl, agentReplyEl, formHostEl);
+    Object.assign(session as any, {
+      agentReplyEl,
+      containerEl,
+      formHostEl,
+      inputEl,
+      inputWrapEl,
+      spinnerEl,
+    });
+
+    await (session as any).generate();
+
+    expect(formHostEl.querySelector('.claudian-inline-form-card')).not.toBeNull();
+
+    const audienceInput = formHostEl.querySelector<HTMLInputElement>('input[name="audience"]');
+    const toneSelect = formHostEl.querySelector<HTMLSelectElement>('select[name="tone"]');
+    const shipCheckbox = formHostEl.querySelector<HTMLInputElement>('input[name="ship"]');
+    const formEl = formHostEl.querySelector('form');
+    expect(audienceInput).not.toBeNull();
+    expect(toneSelect).not.toBeNull();
+    expect(shipCheckbox).not.toBeNull();
+    expect(formEl).not.toBeNull();
+
+    audienceInput!.value = 'Developers';
+    toneSelect!.value = 'formal';
+    shipCheckbox!.checked = true;
+    formEl!.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+    await Promise.resolve();
+
+    expect(service.continueConversation).toHaveBeenCalledWith(
+      'Form response for "Need more details":\n'
+        + '- Audience (audience): Developers\n'
+        + '- Tone (tone): formal\n'
+        + '- Ready to ship (ship): Yes',
+      [],
+    );
+  });
 });

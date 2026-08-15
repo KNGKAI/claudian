@@ -2,9 +2,17 @@ import { appendContextFiles } from '../../utils/context';
 import { getTodayDate } from '../../utils/date';
 import { formatEditorContext } from '../../utils/editor';
 import type {
+  InlineEditCheckboxField,
+  InlineEditFormField,
+  InlineEditFormLayout,
+  InlineEditFormOption,
+  InlineEditFormSection,
   InlineEditCursorRequest,
   InlineEditRequest,
   InlineEditResult,
+  InlineEditSelectField,
+  InlineEditTextareaField,
+  InlineEditTextField,
 } from '../providers/types';
 
 export function parseInlineEditResponse(responseText: string): InlineEditResult {
@@ -16,6 +24,15 @@ export function parseInlineEditResponse(responseText: string): InlineEditResult 
   const insertionMatch = responseText.match(/<insertion>([\s\S]*?)<\/insertion>/);
   if (insertionMatch) {
     return { success: true, insertedText: insertionMatch[1] };
+  }
+
+  const formLayoutMatch = responseText.match(/<form_layout>([\s\S]*?)<\/form_layout>/);
+  if (formLayoutMatch) {
+    const formLayout = parseInlineEditFormLayout(formLayoutMatch[1]);
+    if (formLayout) {
+      return { success: true, formLayout };
+    }
+    return { success: false, error: 'Invalid form layout response' };
   }
 
   const trimmed = responseText.trim();
@@ -56,6 +73,28 @@ export function buildInlineEditPrompt(request: InlineEditRequest): string {
   }
 
   return prompt;
+}
+
+export function serializeInlineEditFormSubmission(
+  layout: InlineEditFormLayout,
+  values: Record<string, string | boolean>,
+): string {
+  const lines = [`Form response for "${layout.title}":`];
+
+  for (const section of layout.sections) {
+    for (const field of section.fields) {
+      const value = values[field.id];
+      if (value === undefined) continue;
+      if (field.type === 'checkbox') {
+        lines.push(`- ${field.label} (${field.id}): ${value ? 'Yes' : 'No'}`);
+        continue;
+      }
+      const normalized = `${value}`.trim();
+      lines.push(`- ${field.label} (${field.id}): ${normalized || '(empty)'}`);
+    }
+  }
+
+  return lines.join('\n');
 }
 
 export function getInlineEditSystemPrompt(): string {
@@ -159,6 +198,68 @@ CORRECT: "This is a guide about..."
 
 If the request is ambiguous, ask a clarifying question. Keep questions concise and specific.
 
+### When You Need Structured Input
+
+If you need several inputs, choices, or a richer editor-side layout, output ONLY a \`<form_layout>\` JSON block. Claudian will render the form as trusted editor HTML.
+
+Supported field types:
+- \`text\`
+- \`textarea\`
+- \`select\`
+- \`checkbox\`
+
+Supported form JSON shape:
+
+\`\`\`
+<form_layout>
+{
+  "title": "Need a few details",
+  "description": "Short explanation shown above the form.",
+  "submitLabel": "Continue",
+  "cancelLabel": "Cancel",
+  "sections": [
+    {
+      "title": "Overview",
+      "description": "Optional helper text",
+      "columns": 2,
+      "fields": [
+        {
+          "id": "audience",
+          "type": "text",
+          "label": "Audience",
+          "placeholder": "Who is this for?",
+          "required": true
+        },
+        {
+          "id": "tone",
+          "type": "select",
+          "label": "Tone",
+          "options": [
+            { "label": "Formal", "value": "formal" },
+            { "label": "Friendly", "value": "friendly" }
+          ]
+        },
+        {
+          "id": "constraints",
+          "type": "textarea",
+          "label": "Constraints",
+          "rows": 4,
+          "span": 2
+        }
+      ]
+    }
+  ]
+}
+</form_layout>
+\`\`\`
+
+Rules:
+- Output ONLY valid JSON inside \`<form_layout>\`.
+- Never emit raw HTML.
+- Keep labels concise.
+- Use stable field ids.
+- Use \`span\` only when needed for wider fields.
+
 ## Examples
 
 ### Selection Mode
@@ -234,4 +335,155 @@ CORRECT (asking for clarification):
 
 Then after user clarifies "river bank":
 <replacement>La orilla era empinada.</replacement>`;
+}
+
+function parseInlineEditFormLayout(rawJson: string): InlineEditFormLayout | null {
+  try {
+    return normalizeInlineEditFormLayout(JSON.parse(rawJson));
+  } catch {
+    return null;
+  }
+}
+
+function normalizeInlineEditFormLayout(raw: unknown): InlineEditFormLayout | null {
+  if (!isRecord(raw)) return null;
+  const title = nonEmptyString(raw.title);
+  if (!title) return null;
+
+  const sections = Array.isArray(raw.sections)
+    ? raw.sections
+      .map(normalizeInlineEditFormSection)
+      .filter((section): section is InlineEditFormSection => section !== null)
+    : [];
+
+  if (sections.length === 0) return null;
+
+  return {
+    title,
+    ...(optionalString(raw.description) ? { description: optionalString(raw.description) } : {}),
+    ...(optionalString(raw.submitLabel) ? { submitLabel: optionalString(raw.submitLabel) } : {}),
+    ...(optionalString(raw.cancelLabel) ? { cancelLabel: optionalString(raw.cancelLabel) } : {}),
+    sections,
+  };
+}
+
+function normalizeInlineEditFormSection(raw: unknown): InlineEditFormSection | null {
+  if (!isRecord(raw) || !Array.isArray(raw.fields)) return null;
+  const fields = raw.fields
+    .map(normalizeInlineEditFormField)
+    .filter((field): field is InlineEditFormField => field !== null);
+  if (fields.length === 0) return null;
+
+  return {
+    ...(optionalString(raw.title) ? { title: optionalString(raw.title) } : {}),
+    ...(optionalString(raw.description) ? { description: optionalString(raw.description) } : {}),
+    ...(normalizeColumnCount(raw.columns) ? { columns: normalizeColumnCount(raw.columns) } : {}),
+    fields,
+  };
+}
+
+function normalizeInlineEditFormField(raw: unknown): InlineEditFormField | null {
+  if (!isRecord(raw)) return null;
+
+  const type = raw.type;
+  const id = nonEmptyString(raw.id);
+  const label = nonEmptyString(raw.label);
+  if (!id || !label) return null;
+
+  const base = {
+    id,
+    label,
+    ...(optionalString(raw.description) ? { description: optionalString(raw.description) } : {}),
+    ...(optionalString(raw.helperText) ? { helperText: optionalString(raw.helperText) } : {}),
+    ...(typeof raw.required === 'boolean' ? { required: raw.required } : {}),
+    ...(normalizeSpan(raw.span) ? { span: normalizeSpan(raw.span) } : {}),
+  };
+
+  if (type === 'text') {
+    const field: InlineEditTextField = {
+      ...base,
+      type,
+      ...(optionalString(raw.defaultValue) ? { defaultValue: optionalString(raw.defaultValue) } : {}),
+      ...(optionalString(raw.placeholder) ? { placeholder: optionalString(raw.placeholder) } : {}),
+    };
+    return field;
+  }
+
+  if (type === 'textarea') {
+    const field: InlineEditTextareaField = {
+      ...base,
+      type,
+      ...(optionalString(raw.defaultValue) ? { defaultValue: optionalString(raw.defaultValue) } : {}),
+      ...(optionalString(raw.placeholder) ? { placeholder: optionalString(raw.placeholder) } : {}),
+      ...(normalizeTextareaRows(raw.rows) ? { rows: normalizeTextareaRows(raw.rows) } : {}),
+    };
+    return field;
+  }
+
+  if (type === 'select') {
+    const options = Array.isArray(raw.options)
+      ? raw.options
+        .map(normalizeInlineEditFormOption)
+        .filter((option): option is InlineEditFormOption => option !== null)
+      : [];
+    if (options.length === 0) return null;
+    const field: InlineEditSelectField = {
+      ...base,
+      type,
+      options,
+      ...(optionalString(raw.defaultValue) ? { defaultValue: optionalString(raw.defaultValue) } : {}),
+    };
+    return field;
+  }
+
+  if (type === 'checkbox') {
+    const field: InlineEditCheckboxField = {
+      ...base,
+      type,
+      ...(typeof raw.defaultChecked === 'boolean' ? { defaultChecked: raw.defaultChecked } : {}),
+    };
+    return field;
+  }
+
+  return null;
+}
+
+function normalizeInlineEditFormOption(raw: unknown): InlineEditFormOption | null {
+  if (!isRecord(raw)) return null;
+  const label = nonEmptyString(raw.label);
+  const value = nonEmptyString(raw.value);
+  if (!label || !value) return null;
+  return {
+    label,
+    value,
+    ...(optionalString(raw.description) ? { description: optionalString(raw.description) } : {}),
+  };
+}
+
+function normalizeColumnCount(value: unknown): 1 | 2 | 3 | null {
+  return value === 1 || value === 2 || value === 3 ? value : null;
+}
+
+function normalizeSpan(value: unknown): 1 | 2 | 3 | null {
+  return value === 1 || value === 2 || value === 3 ? value : null;
+}
+
+function normalizeTextareaRows(value: unknown): number | null {
+  return typeof value === 'number' && Number.isInteger(value) && value >= 2 && value <= 12
+    ? value
+    : null;
+}
+
+function nonEmptyString(value: unknown): string | null {
+  if (typeof value !== 'string') return null;
+  const trimmed = value.trim();
+  return trimmed ? trimmed : null;
+}
+
+function optionalString(value: unknown): string | undefined {
+  return typeof value === 'string' && value.trim() ? value.trim() : undefined;
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return !!value && typeof value === 'object' && !Array.isArray(value);
 }

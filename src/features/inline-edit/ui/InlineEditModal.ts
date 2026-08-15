@@ -10,7 +10,13 @@ import { ProviderCommandDiscoveryStore } from '../../../core/providers/commands/
 import { resolveConversationModel } from '../../../core/providers/conversationModel';
 import { ProviderRegistry } from '../../../core/providers/ProviderRegistry';
 import { ProviderWorkspaceRegistry } from '../../../core/providers/ProviderWorkspaceRegistry';
-import { type InlineEditMode, type InlineEditService, type ProviderId } from '../../../core/providers/types';
+import { serializeInlineEditFormSubmission } from '../../../core/prompt/inlineEdit';
+import {
+  type InlineEditFormLayout,
+  type InlineEditMode,
+  type InlineEditService,
+  type ProviderId,
+} from '../../../core/providers/types';
 import { hideSelectionHighlight, showSelectionHighlight } from '../../../shared/components/SelectionHighlight';
 import { SlashCommandDropdown } from '../../../shared/components/SlashCommandDropdown';
 import { MentionDropdownController } from '../../../shared/mention/MentionDropdownController';
@@ -29,6 +35,10 @@ import { externalContextScanner } from '../../../utils/externalContextScanner';
 import { normalizeInsertionText } from '../../../utils/inlineEdit';
 import { getVaultPath, normalizePathForVault as normalizePathForVaultUtil } from '../../../utils/path';
 import type { FeatureHost } from '../../FeatureHost';
+import {
+  type InlineEditFormCardHandle,
+  renderInlineEditFormCard,
+} from './InlineEditFormCard';
 import { renderInlineEditMarkdownPreview } from './inlineEditMarkdownPreview';
 
 type InlineEditHost = FeatureHost & Component;
@@ -370,6 +380,9 @@ export class InlineEditSession {
   private spinnerEl: HTMLElement | null = null;
   private agentReplyEl: HTMLElement | null = null;
   private containerEl: HTMLElement | null = null;
+  private inputWrapEl: HTMLElement | null = null;
+  private formHostEl: HTMLElement | null = null;
+  private formCard: InlineEditFormCardHandle | null = null;
   private editedText: string | null = null;
   private insertedText: string | null = null;
   private selFrom = 0;
@@ -528,6 +541,7 @@ export class InlineEditSession {
     this.agentReplyEl = container.createDiv({ cls: 'claudian-inline-agent-reply claudian-hidden' });
 
     const inputWrap = container.createDiv({ cls: 'claudian-inline-input-wrap' });
+    this.inputWrapEl = inputWrap;
 
     const inputEl = inputWrap.createEl('input', {
       cls: 'claudian-inline-input',
@@ -540,6 +554,7 @@ export class InlineEditSession {
     this.inputEl = inputEl;
 
     this.spinnerEl = inputWrap.createDiv({ cls: 'claudian-inline-spinner claudian-hidden' });
+    this.formHostEl = container.createDiv({ cls: 'claudian-inline-form-host claudian-hidden' });
 
     const inlineCatalog = ProviderWorkspaceRegistry.getCommandCatalog(this.resolvedProviderId);
     this.slashCommandDropdown = new SlashCommandDropdown(
@@ -662,9 +677,9 @@ export class InlineEditSession {
     }
   }
 
-  private async generate(): Promise<void> {
-    if (this.settled || !this.inputEl || !this.spinnerEl) return;
-    const userMessage = this.inputEl.value.trim();
+  private async generate(messageOverride?: string): Promise<void> {
+    if (this.settled || !this.spinnerEl) return;
+    const userMessage = (messageOverride ?? this.inputEl?.value ?? '').trim();
     if (!userMessage) return;
     const generation = ++this.generation;
 
@@ -680,7 +695,10 @@ export class InlineEditSession {
 
     this.removeSelectionListeners();
 
-    this.inputEl.disabled = true;
+    this.hideFormCard();
+    if (this.inputEl) {
+      this.inputEl.disabled = true;
+    }
     this.spinnerEl.removeClass('claudian-hidden');
 
     const contextFiles = this.resolveContextFilesFromMessage(userMessage);
@@ -740,10 +758,15 @@ export class InlineEditSession {
       } else if (result.clarification) {
         this.showAgentReply(result.clarification);
         this.isConversing = true;
-        this.inputEl.disabled = false;
-        this.inputEl.value = '';
-        this.inputEl.placeholder = 'Reply to continue...';
-        this.inputEl.focus();
+        if (this.inputEl) {
+          this.inputEl.disabled = false;
+          this.inputEl.value = '';
+          this.inputEl.placeholder = 'Reply to continue...';
+          this.inputEl.focus();
+        }
+      } else if (result.formLayout) {
+        this.isConversing = true;
+        this.showFormCard(result.formLayout);
       } else {
         this.handleError('No response from agent');
       }
@@ -758,6 +781,7 @@ export class InlineEditSession {
 
   private showAgentReply(message: string) {
     if (!this.agentReplyEl || !this.containerEl) return;
+    this.restoreInputSurface();
     const replyEl = this.agentReplyEl;
     const renderVersion = ++this.agentReplyRenderVersion;
     const renderedEl = this.agentReplyEl.createDiv();
@@ -775,6 +799,7 @@ export class InlineEditSession {
 
   private handleError(errorMessage: string) {
     if (!this.inputEl) return;
+    this.restoreInputSurface();
     this.inputEl.disabled = false;
     this.inputEl.placeholder = errorMessage;
     this.updatePositionsFromEditor();
@@ -905,6 +930,9 @@ export class InlineEditSession {
 
     this.mentionDropdown?.destroy();
     this.mentionDropdown = null;
+
+    this.formCard?.destroy();
+    this.formCard = null;
 
     if (activeController === this) {
       activeController = null;
@@ -1049,6 +1077,41 @@ export class InlineEditSession {
     }
 
     return [...resolved];
+  }
+
+  private showFormCard(layout: InlineEditFormLayout): void {
+    if (!this.containerEl || !this.formHostEl) {
+      this.handleError('Form rendering is unavailable');
+      return;
+    }
+    this.agentReplyEl?.addClass('claudian-hidden');
+    this.inputWrapEl?.addClass('claudian-hidden');
+    this.formHostEl.removeClass('claudian-hidden');
+    this.containerEl.classList.add('has-form-card');
+    this.formCard?.destroy();
+    this.formCard = renderInlineEditFormCard(this.formHostEl, {
+      document: this.getOwnerDocument(),
+      layout,
+      onCancel: () => this.reject(),
+      onSubmit: (values) => {
+        this.formCard?.setBusy(true);
+        void this.generate(serializeInlineEditFormSubmission(layout, values))
+          .finally(() => this.formCard?.setBusy(false));
+      },
+    });
+  }
+
+  private hideFormCard(): void {
+    this.formCard?.destroy();
+    this.formCard = null;
+    this.formHostEl?.empty();
+    this.formHostEl?.addClass('claudian-hidden');
+    this.containerEl?.classList.remove('has-form-card');
+  }
+
+  private restoreInputSurface(): void {
+    this.hideFormCard();
+    this.inputWrapEl?.removeClass('claudian-hidden');
   }
 
 }

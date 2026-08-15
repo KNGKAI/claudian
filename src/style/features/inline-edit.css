@@ -108,6 +108,203 @@
   margin-bottom: 0;
 }
 
+.claudian-inline-form-host {
+  margin-top: 6px;
+}
+
+.claudian-inline-form-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 12px;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 12px;
+  background: var(--background-primary);
+}
+
+.claudian-inline-form-card.is-busy {
+  opacity: 0.72;
+}
+
+.claudian-inline-form-card-header,
+.claudian-inline-form-section-header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.claudian-inline-form-card-title,
+.claudian-inline-form-section-title {
+  margin: 0;
+  color: var(--text-normal);
+  line-height: 1.25;
+}
+
+.claudian-inline-form-card-title {
+  font-size: var(--font-ui-medium, 15px);
+}
+
+.claudian-inline-form-section-title {
+  font-size: var(--font-ui-small, 13px);
+}
+
+.claudian-inline-form-card-description,
+.claudian-inline-form-section-description,
+.claudian-inline-form-field-description,
+.claudian-inline-form-helper {
+  color: var(--text-muted);
+  font-size: var(--font-ui-smaller, 12px);
+  line-height: 1.4;
+}
+
+.claudian-inline-form-card-description,
+.claudian-inline-form-section-description,
+.claudian-inline-form-field-description {
+  margin: 0;
+}
+
+.claudian-inline-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.claudian-inline-form-fieldset {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.claudian-inline-form-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 10px;
+  background: var(--background-secondary);
+}
+
+.claudian-inline-form-grid {
+  display: grid;
+  gap: 10px;
+}
+
+.claudian-inline-form-grid.columns-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.claudian-inline-form-grid.columns-3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.claudian-inline-form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.claudian-inline-form-field.span-2 {
+  grid-column: span 2;
+}
+
+.claudian-inline-form-field.span-3 {
+  grid-column: span 3;
+}
+
+.claudian-inline-form-label {
+  color: var(--text-normal);
+  font-size: var(--font-ui-small, 13px);
+  font-weight: 600;
+}
+
+.claudian-inline-form-control,
+.claudian-inline-form-control:is(input, textarea, select) {
+  width: 100%;
+  min-width: 0;
+  padding: 8px 10px;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 8px;
+  background: var(--background-modifier-form-field);
+  box-shadow: none;
+  color: var(--text-normal);
+  font-family: inherit;
+  font-size: var(--font-ui-small, 13px);
+}
+
+.claudian-inline-form-control:is(input, textarea, select):hover {
+  border-color: var(--background-modifier-border);
+  background: var(--background-modifier-form-field);
+  box-shadow: none;
+}
+
+.claudian-inline-form-control:is(input, textarea, select):focus,
+.claudian-inline-form-control:is(input, textarea, select):focus-visible {
+  outline: none;
+  border-color: var(--interactive-accent);
+  box-shadow: none;
+}
+
+.claudian-inline-form-control.is-textarea {
+  resize: vertical;
+}
+
+.claudian-inline-form-checkbox-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.claudian-inline-form-checkbox-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.claudian-inline-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--background-modifier-border);
+}
+
+.claudian-inline-form-action,
+.claudian-inline-form-action:hover,
+.claudian-inline-form-action:focus,
+.claudian-inline-form-action:focus-visible,
+.claudian-inline-form-action:active {
+  min-height: 30px;
+  padding: 6px 12px;
+  border: 0;
+  border-radius: 8px;
+  box-shadow: none;
+  color: var(--text-muted);
+  font-size: var(--font-ui-small, 13px);
+}
+
+.claudian-inline-form-action.secondary {
+  background: transparent;
+}
+
+.claudian-inline-form-action.primary,
+.claudian-inline-form-action.primary:hover,
+.claudian-inline-form-action.primary:focus,
+.claudian-inline-form-action.primary:focus-visible,
+.claudian-inline-form-action.primary:active {
+  background: var(--interactive-accent);
+  color: var(--text-on-accent, #fff);
+}
+
+.claudian-inline-form-fieldset:disabled .claudian-inline-form-action {
+  color: var(--text-faint);
+}
+
 .claudian-inline-diff-preview {
   margin: 4px 0 6px;
   padding: 8px 10px;

@@ -665,6 +665,66 @@ export interface InstructionRefineService {
 
 export type InlineEditMode = 'selection' | 'cursor';
 
+export interface InlineEditFormOption {
+  label: string;
+  value: string;
+  description?: string;
+}
+
+export type InlineEditFormField =
+  | InlineEditTextField
+  | InlineEditTextareaField
+  | InlineEditSelectField
+  | InlineEditCheckboxField;
+
+export interface InlineEditFormFieldBase {
+  id: string;
+  label: string;
+  description?: string;
+  helperText?: string;
+  required?: boolean;
+  span?: 1 | 2 | 3;
+}
+
+export interface InlineEditTextField extends InlineEditFormFieldBase {
+  type: 'text';
+  defaultValue?: string;
+  placeholder?: string;
+}
+
+export interface InlineEditTextareaField extends InlineEditFormFieldBase {
+  type: 'textarea';
+  defaultValue?: string;
+  placeholder?: string;
+  rows?: number;
+}
+
+export interface InlineEditSelectField extends InlineEditFormFieldBase {
+  type: 'select';
+  defaultValue?: string;
+  options: InlineEditFormOption[];
+}
+
+export interface InlineEditCheckboxField extends InlineEditFormFieldBase {
+  type: 'checkbox';
+  defaultChecked?: boolean;
+}
+
+export interface InlineEditFormSection {
+  title?: string;
+  description?: string;
+  columns?: 1 | 2 | 3;
+  fields: InlineEditFormField[];
+}
+
+export interface InlineEditFormLayout {
+  title: string;
+  description?: string;
+  submitLabel?: string;
+  cancelLabel?: string;
+  sections: InlineEditFormSection[];
+}
+
 export interface InlineEditSelectionRequest {
   mode: 'selection';
   instruction: string;
@@ -691,6 +751,7 @@ export interface InlineEditOutcome {
   editedText?: string;
   insertedText?: string;
   clarification?: string;
+  formLayout?: InlineEditFormLayout;
   error?: string;
 }
 
