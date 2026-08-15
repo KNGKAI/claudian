@@ -4,13 +4,13 @@ import { Decoration, EditorView, WidgetType } from '@codemirror/view';
 import type { App, Component, Editor, MarkdownView } from 'obsidian';
 import { Notice } from 'obsidian';
 
+import { serializeInlineEditFormSubmission } from '../../../core/prompt/inlineEdit';
 import { getHiddenProviderCommandSet } from '../../../core/providers/commands/hiddenCommands';
 import { normalizeProviderCommandDiscoveryItems } from '../../../core/providers/commands/ProviderCommandDiscoveryResult';
 import { ProviderCommandDiscoveryStore } from '../../../core/providers/commands/ProviderCommandDiscoveryStore';
 import { resolveConversationModel } from '../../../core/providers/conversationModel';
 import { ProviderRegistry } from '../../../core/providers/ProviderRegistry';
 import { ProviderWorkspaceRegistry } from '../../../core/providers/ProviderWorkspaceRegistry';
-import { serializeInlineEditFormSubmission } from '../../../core/prompt/inlineEdit';
 import {
   type InlineEditFormLayout,
   type InlineEditMode,
@@ -1090,7 +1090,6 @@ export class InlineEditSession {
     this.containerEl.classList.add('has-form-card');
     this.formCard?.destroy();
     this.formCard = renderInlineEditFormCard(this.formHostEl, {
-      document: this.getOwnerDocument(),
       layout,
       onCancel: () => this.reject(),
       onSubmit: (values) => {

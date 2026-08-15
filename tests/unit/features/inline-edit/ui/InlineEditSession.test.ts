@@ -71,6 +71,26 @@ function createSession() {
   return { editor, editorView, resolve, service, session, sourceDoc };
 }
 
+function findNamedControl(root: any, name: string): any {
+  if (!root) return null;
+  if (root.name === name || root.getAttribute?.('name') === name) return root;
+  for (const child of root.children ?? []) {
+    const found = findNamedControl(child, name);
+    if (found) return found;
+  }
+  return null;
+}
+
+function findTag(root: any, tagName: string): any {
+  if (!root) return null;
+  if (root.tagName === tagName) return root;
+  for (const child of root.children ?? []) {
+    const found = findTag(child, tagName);
+    if (found) return found;
+  }
+  return null;
+}
+
 describe('InlineEditSession', () => {
   afterEach(() => {
     jest.restoreAllMocks();
@@ -216,49 +236,66 @@ describe('InlineEditSession', () => {
       success: true,
     });
 
-    const inputEl = document.createElement('input');
-    inputEl.value = 'rewrite';
-    inputEl.focus = jest.fn();
-    const spinnerEl = createMockEl();
-    const containerEl = document.createElement('div');
-    const inputWrapEl = document.createElement('div');
-    const agentReplyEl = document.createElement('div');
-    const formHostEl = document.createElement('div');
-    containerEl.append(inputWrapEl, agentReplyEl, formHostEl);
-    Object.assign(session as any, {
-      agentReplyEl,
-      containerEl,
-      formHostEl,
-      inputEl,
-      inputWrapEl,
-      spinnerEl,
-    });
+    const originalDocument = (global as any).document;
+    const mockDocument = {
+      body: createMockEl('body'),
+      createElement: (tagName: string) => createMockEl(tagName),
+      addEventListener: jest.fn(),
+      removeEventListener: jest.fn(),
+    };
+    (global as any).document = mockDocument;
 
-    await (session as any).generate();
+    try {
+      const inputEl = Object.assign(createMockEl('input'), {
+        disabled: false,
+        focus: jest.fn(),
+        value: 'rewrite',
+      });
+      const spinnerEl = createMockEl();
+      const containerEl = createMockEl();
+      const inputWrapEl = createMockEl();
+      const agentReplyEl = createMockEl();
+      const formHostEl = createMockEl();
+      containerEl.appendChild(inputWrapEl);
+      containerEl.appendChild(agentReplyEl);
+      containerEl.appendChild(formHostEl);
+      Object.assign(session as any, {
+        agentReplyEl,
+        containerEl,
+        formHostEl,
+        inputEl,
+        inputWrapEl,
+        spinnerEl,
+      });
 
-    expect(formHostEl.querySelector('.claudian-inline-form-card')).not.toBeNull();
+      await (session as any).generate();
 
-    const audienceInput = formHostEl.querySelector<HTMLInputElement>('input[name="audience"]');
-    const toneSelect = formHostEl.querySelector<HTMLSelectElement>('select[name="tone"]');
-    const shipCheckbox = formHostEl.querySelector<HTMLInputElement>('input[name="ship"]');
-    const formEl = formHostEl.querySelector('form');
-    expect(audienceInput).not.toBeNull();
-    expect(toneSelect).not.toBeNull();
-    expect(shipCheckbox).not.toBeNull();
-    expect(formEl).not.toBeNull();
+      expect(formHostEl.querySelector('.claudian-inline-form-card')).not.toBeNull();
 
-    audienceInput!.value = 'Developers';
-    toneSelect!.value = 'formal';
-    shipCheckbox!.checked = true;
-    formEl!.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
-    await Promise.resolve();
+      const audienceInput = findNamedControl(formHostEl, 'audience');
+      const toneSelect = findNamedControl(formHostEl, 'tone');
+      const shipCheckbox = findNamedControl(formHostEl, 'ship');
+      const formEl = findTag(formHostEl, 'FORM');
+      expect(audienceInput).not.toBeNull();
+      expect(toneSelect).not.toBeNull();
+      expect(shipCheckbox).not.toBeNull();
+      expect(formEl).not.toBeNull();
 
-    expect(service.continueConversation).toHaveBeenCalledWith(
-      'Form response for "Need more details":\n'
-        + '- Audience (audience): Developers\n'
-        + '- Tone (tone): formal\n'
-        + '- Ready to ship (ship): Yes',
-      [],
-    );
+      audienceInput.value = 'Developers';
+      toneSelect.value = 'formal';
+      shipCheckbox.checked = true;
+      formEl.dispatchEvent({ preventDefault: jest.fn(), type: 'submit' });
+      await Promise.resolve();
+
+      expect(service.continueConversation).toHaveBeenCalledWith(
+        'Form response for "Need more details":\n'
+          + '- Audience (audience): Developers\n'
+          + '- Tone (tone): formal\n'
+          + '- Ready to ship (ship): Yes',
+        [],
+      );
+    } finally {
+      (global as any).document = originalDocument;
+    }
   });
 });

@@ -11,7 +11,6 @@ export interface InlineEditFormCardHandle {
 }
 
 export interface InlineEditFormCardOptions {
-  document: Document;
   layout: InlineEditFormLayout;
   onCancel: () => void;
   onSubmit: (values: Record<string, string | boolean>) => void;
@@ -21,87 +20,71 @@ export function renderInlineEditFormCard(
   container: HTMLElement,
   options: InlineEditFormCardOptions,
 ): InlineEditFormCardHandle {
-  container.replaceChildren();
+  container.empty();
 
-  const rootEl = options.document.createElement('section');
-  rootEl.className = 'claudian-inline-form-card';
-  container.appendChild(rootEl);
+  const rootEl = container.createEl('section', { cls: 'claudian-inline-form-card' });
 
-  const headerEl = options.document.createElement('div');
-  headerEl.className = 'claudian-inline-form-card-header';
-  rootEl.appendChild(headerEl);
+  const headerEl = rootEl.createDiv({ cls: 'claudian-inline-form-card-header' });
 
-  const titleEl = options.document.createElement('h3');
-  titleEl.className = 'claudian-inline-form-card-title';
-  titleEl.textContent = options.layout.title;
-  headerEl.appendChild(titleEl);
+  headerEl.createEl('h3', {
+    cls: 'claudian-inline-form-card-title',
+    text: options.layout.title,
+  });
 
   if (options.layout.description) {
-    const descriptionEl = options.document.createElement('p');
-    descriptionEl.className = 'claudian-inline-form-card-description';
-    descriptionEl.textContent = options.layout.description;
-    headerEl.appendChild(descriptionEl);
+    headerEl.createEl('p', {
+      cls: 'claudian-inline-form-card-description',
+      text: options.layout.description,
+    });
   }
 
-  const formEl = options.document.createElement('form');
-  formEl.className = 'claudian-inline-form';
-  rootEl.appendChild(formEl);
+  const formEl = rootEl.createEl('form', { cls: 'claudian-inline-form' });
 
-  const fieldsetEl = options.document.createElement('fieldset');
-  fieldsetEl.className = 'claudian-inline-form-fieldset';
-  formEl.appendChild(fieldsetEl);
+  const fieldsetEl = formEl.createEl('fieldset', { cls: 'claudian-inline-form-fieldset' });
 
   for (const section of options.layout.sections) {
-    const sectionEl = options.document.createElement('section');
-    sectionEl.className = 'claudian-inline-form-section';
-    fieldsetEl.appendChild(sectionEl);
+    const sectionEl = fieldsetEl.createEl('section', { cls: 'claudian-inline-form-section' });
 
     if (section.title || section.description) {
-      const sectionHeaderEl = options.document.createElement('div');
-      sectionHeaderEl.className = 'claudian-inline-form-section-header';
-      sectionEl.appendChild(sectionHeaderEl);
+      const sectionHeaderEl = sectionEl.createDiv({ cls: 'claudian-inline-form-section-header' });
 
       if (section.title) {
-        const sectionTitleEl = options.document.createElement('h4');
-        sectionTitleEl.className = 'claudian-inline-form-section-title';
-        sectionTitleEl.textContent = section.title;
-        sectionHeaderEl.appendChild(sectionTitleEl);
+        sectionHeaderEl.createEl('h4', {
+          cls: 'claudian-inline-form-section-title',
+          text: section.title,
+        });
       }
 
       if (section.description) {
-        const sectionDescriptionEl = options.document.createElement('p');
-        sectionDescriptionEl.className = 'claudian-inline-form-section-description';
-        sectionDescriptionEl.textContent = section.description;
-        sectionHeaderEl.appendChild(sectionDescriptionEl);
+        sectionHeaderEl.createEl('p', {
+          cls: 'claudian-inline-form-section-description',
+          text: section.description,
+        });
       }
     }
 
-    const gridEl = options.document.createElement('div');
     const columns = section.columns ?? 1;
-    gridEl.className = `claudian-inline-form-grid columns-${columns}`;
-    sectionEl.appendChild(gridEl);
+    const gridEl = sectionEl.createDiv({ cls: `claudian-inline-form-grid columns-${columns}` });
 
     for (const field of section.fields) {
-      gridEl.appendChild(createFieldEl(options.document, field));
+      createFieldEl(gridEl, field);
     }
   }
 
-  const actionsEl = options.document.createElement('div');
-  actionsEl.className = 'claudian-inline-form-actions';
-  formEl.appendChild(actionsEl);
+  const actionsEl = formEl.createDiv({ cls: 'claudian-inline-form-actions' });
 
-  const cancelButton = options.document.createElement('button');
-  cancelButton.className = 'claudian-inline-form-action secondary';
+  const cancelButton = actionsEl.createEl('button', {
+    cls: 'claudian-inline-form-action secondary',
+    text: options.layout.cancelLabel ?? 'Cancel',
+  });
   cancelButton.type = 'button';
-  cancelButton.textContent = options.layout.cancelLabel ?? 'Cancel';
   cancelButton.addEventListener('click', () => options.onCancel());
-  actionsEl.appendChild(cancelButton);
 
-  const submitButton = options.document.createElement('button');
-  submitButton.className = 'claudian-inline-form-action primary';
+  const submitButton = actionsEl.createEl('button', {
+    cls: 'claudian-inline-form-action primary',
+    text: options.layout.submitLabel ?? 'Continue',
+  });
   submitButton.type = 'submit';
-  submitButton.textContent = options.layout.submitLabel ?? 'Continue';
-  actionsEl.appendChild(submitButton);
 
   formEl.addEventListener('submit', (event) => {
     event.preventDefault();
@@ -119,9 +102,8 @@ export function renderInlineEditFormCard(
   };
 }
 
-function createFieldEl(document: Document, field: InlineEditFormField): HTMLElement {
-  const wrapperEl = document.createElement('div');
-  wrapperEl.className = 'claudian-inline-form-field';
+function createFieldEl(parentEl: HTMLElement, field: InlineEditFormField): HTMLElement {
+  const wrapperEl = parentEl.createDiv({ cls: 'claudian-inline-form-field' });
   wrapperEl.dataset.fieldType = field.type;
   wrapperEl.dataset.fieldId = field.id;
   if (field.span) {
@@ -129,23 +111,21 @@ function createFieldEl(document: Document, field: InlineEditFormField): HTMLElem
   }
 
   if (field.type === 'checkbox') {
-    return createCheckboxFieldEl(document, wrapperEl, field);
+    return createCheckboxFieldEl(wrapperEl, field);
   }
 
-  const labelEl = document.createElement('label');
-  labelEl.className = 'claudian-inline-form-label';
+  const labelEl = wrapperEl.createEl('label', { cls: 'claudian-inline-form-label' });
   labelEl.setAttribute('for', field.id);
   labelEl.textContent = field.label;
-  wrapperEl.appendChild(labelEl);
 
   if (field.description) {
-    const descriptionEl = document.createElement('div');
-    descriptionEl.className = 'claudian-inline-form-field-description';
-    descriptionEl.textContent = field.description;
-    wrapperEl.appendChild(descriptionEl);
+    wrapperEl.createDiv({
+      cls: 'claudian-inline-form-field-description',
+      text: field.description,
+    });
   }
 
-  const controlEl = createControlEl(document, field);
+  const controlEl = createControlEl(wrapperEl, field);
   controlEl.id = field.id;
   controlEl.setAttribute('name', field.id);
   if ('placeholder' in field && field.placeholder) {
@@ -154,98 +134,85 @@ function createFieldEl(document: Document, field: InlineEditFormField): HTMLElem
   if (field.required) {
     controlEl.required = true;
   }
-  wrapperEl.appendChild(controlEl);
 
   if (field.helperText) {
-    const helperEl = document.createElement('div');
-    helperEl.className = 'claudian-inline-form-helper';
-    helperEl.textContent = field.helperText;
-    wrapperEl.appendChild(helperEl);
+    wrapperEl.createDiv({
+      cls: 'claudian-inline-form-helper',
+      text: field.helperText,
+    });
   }
 
   return wrapperEl;
 }
 
 function createCheckboxFieldEl(
-  document: Document,
   wrapperEl: HTMLElement,
   field: InlineEditCheckboxField,
 ): HTMLElement {
   wrapperEl.classList.add('is-checkbox');
-  const checkboxLabelEl = document.createElement('label');
-  checkboxLabelEl.className = 'claudian-inline-form-checkbox-label';
+  const checkboxLabelEl = wrapperEl.createEl('label', {
+    cls: 'claudian-inline-form-checkbox-label',
+  });
   checkboxLabelEl.setAttribute('for', field.id);
-  wrapperEl.appendChild(checkboxLabelEl);
 
-  const inputEl = document.createElement('input');
+  const inputEl = checkboxLabelEl.createEl('input');
   inputEl.type = 'checkbox';
   inputEl.id = field.id;
   inputEl.name = field.id;
   inputEl.checked = field.defaultChecked === true;
-  checkboxLabelEl.appendChild(inputEl);
 
-  const textWrapEl = document.createElement('span');
-  textWrapEl.className = 'claudian-inline-form-checkbox-copy';
-  checkboxLabelEl.appendChild(textWrapEl);
+  const textWrapEl = checkboxLabelEl.createSpan({ cls: 'claudian-inline-form-checkbox-copy' });
 
-  const labelEl = document.createElement('span');
-  labelEl.className = 'claudian-inline-form-label';
-  labelEl.textContent = field.label;
-  textWrapEl.appendChild(labelEl);
+  textWrapEl.createSpan({ cls: 'claudian-inline-form-label', text: field.label });
 
   if (field.description) {
-    const descriptionEl = document.createElement('span');
-    descriptionEl.className = 'claudian-inline-form-field-description';
-    descriptionEl.textContent = field.description;
-    textWrapEl.appendChild(descriptionEl);
+    textWrapEl.createSpan({
+      cls: 'claudian-inline-form-field-description',
+      text: field.description,
+    });
   }
 
   if (field.helperText) {
-    const helperEl = document.createElement('div');
-    helperEl.className = 'claudian-inline-form-helper';
-    helperEl.textContent = field.helperText;
-    wrapperEl.appendChild(helperEl);
+    wrapperEl.createDiv({ cls: 'claudian-inline-form-helper', text: field.helperText });
   }
 
   return wrapperEl;
 }
 
 function createControlEl(
-  document: Document,
+  parentEl: HTMLElement,
   field: Exclude<InlineEditFormField, InlineEditCheckboxField>,
 ): HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement {
   if (field.type === 'textarea') {
-    const textareaEl = document.createElement('textarea');
-    textareaEl.className = 'claudian-inline-form-control is-textarea';
+    const textareaEl = parentEl.createEl('textarea', {
+      cls: 'claudian-inline-form-control is-textarea',
+    });
     textareaEl.rows = field.rows ?? 4;
     textareaEl.value = field.defaultValue ?? '';
     return textareaEl;
   }
 
   if (field.type === 'select') {
-    return createSelectEl(document, field);
+    return createSelectEl(parentEl, field);
   }
 
-  const inputEl = document.createElement('input');
-  inputEl.className = 'claudian-inline-form-control';
+  const inputEl = parentEl.createEl('input', { cls: 'claudian-inline-form-control' });
   inputEl.type = 'text';
   inputEl.value = field.defaultValue ?? '';
   return inputEl;
 }
 
-function createSelectEl(document: Document, field: InlineEditSelectField): HTMLSelectElement {
-  const selectEl = document.createElement('select');
-  selectEl.className = 'claudian-inline-form-control';
+function createSelectEl(parentEl: HTMLElement, field: InlineEditSelectField): HTMLSelectElement {
+  const selectEl = parentEl.createEl('select', { cls: 'claudian-inline-form-control' });
 
   if (!field.required) {
-    const emptyOptionEl = document.createElement('option');
+    const emptyOptionEl = selectEl.createEl('option');
     emptyOptionEl.value = '';
     emptyOptionEl.textContent = 'Select an option';
-    selectEl.appendChild(emptyOptionEl);
   }
 
   for (const option of field.options) {
-    const optionEl = document.createElement('option');
+    const optionEl = selectEl.createEl('option');
     optionEl.value = option.value;
     optionEl.textContent = option.label;
     if (option.description) {
@@ -254,7 +221,6 @@ function createSelectEl(document: Document, field: InlineEditSelectField): HTMLS
     if (field.defaultValue === option.value) {
       optionEl.selected = true;
     }
-    selectEl.appendChild(optionEl);
   }
 
   return selectEl;
@@ -268,8 +234,7 @@ function collectFormValues(
 
   for (const section of layout.sections) {
     for (const field of section.fields) {
-      const selector = `[name="${field.id}"]`;
-      const controlEl = fieldsetEl.querySelector<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>(selector);
+      const controlEl = findControlByName(fieldsetEl, field.id);
       if (!controlEl) continue;
       values[field.id] = field.type === 'checkbox'
         ? (controlEl as HTMLInputElement).checked
@@ -278,4 +243,33 @@ function collectFormValues(
   }
 
   return values;
+}
+
+function findControlByName(
+  rootEl: HTMLElement,
+  fieldName: string,
+): HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | null {
+  const attrMatch = rootEl.querySelector<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>(
+    `[name="${fieldName}"]`,
+  );
+  if (attrMatch) {
+    return attrMatch;
+  }
+
+  const scan = (node: HTMLElement): HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | null => {
+    const currentName = (node as HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement).name
+      || node.getAttribute?.('name');
+    if (currentName === fieldName) {
+      return node as HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement;
+    }
+    for (const child of Array.from(node.children)) {
+      const found = scan(child as HTMLElement);
+      if (found) {
+        return found;
+      }
+    }
+    return null;
+  };
+
+  return scan(rootEl);
 }

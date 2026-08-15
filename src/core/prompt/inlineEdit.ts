@@ -3,11 +3,11 @@ import { getTodayDate } from '../../utils/date';
 import { formatEditorContext } from '../../utils/editor';
 import type {
   InlineEditCheckboxField,
+  InlineEditCursorRequest,
   InlineEditFormField,
   InlineEditFormLayout,
   InlineEditFormOption,
   InlineEditFormSection,
-  InlineEditCursorRequest,
   InlineEditRequest,
   InlineEditResult,
   InlineEditSelectField,
@@ -373,11 +373,12 @@ function normalizeInlineEditFormSection(raw: unknown): InlineEditFormSection | n
     .map(normalizeInlineEditFormField)
     .filter((field): field is InlineEditFormField => field !== null);
   if (fields.length === 0) return null;
+  const columns = normalizeColumnCount(raw.columns);
 
   return {
     ...(optionalString(raw.title) ? { title: optionalString(raw.title) } : {}),
     ...(optionalString(raw.description) ? { description: optionalString(raw.description) } : {}),
-    ...(normalizeColumnCount(raw.columns) ? { columns: normalizeColumnCount(raw.columns) } : {}),
+    ...(columns ? { columns } : {}),
     fields,
   };
 }
@@ -389,6 +390,7 @@ function normalizeInlineEditFormField(raw: unknown): InlineEditFormField | null 
   const id = nonEmptyString(raw.id);
   const label = nonEmptyString(raw.label);
   if (!id || !label) return null;
+  const span = normalizeSpan(raw.span);
 
   const base = {
     id,
@@ -396,7 +398,7 @@ function normalizeInlineEditFormField(raw: unknown): InlineEditFormField | null 
     ...(optionalString(raw.description) ? { description: optionalString(raw.description) } : {}),
     ...(optionalString(raw.helperText) ? { helperText: optionalString(raw.helperText) } : {}),
     ...(typeof raw.required === 'boolean' ? { required: raw.required } : {}),
-    ...(normalizeSpan(raw.span) ? { span: normalizeSpan(raw.span) } : {}),
+    ...(span ? { span } : {}),
   };
 
   if (type === 'text') {
@@ -410,12 +412,13 @@ function normalizeInlineEditFormField(raw: unknown): InlineEditFormField | null 
   }
 
   if (type === 'textarea') {
+    const rows = normalizeTextareaRows(raw.rows);
     const field: InlineEditTextareaField = {
       ...base,
       type,
       ...(optionalString(raw.defaultValue) ? { defaultValue: optionalString(raw.defaultValue) } : {}),
       ...(optionalString(raw.placeholder) ? { placeholder: optionalString(raw.placeholder) } : {}),
-      ...(normalizeTextareaRows(raw.rows) ? { rows: normalizeTextareaRows(raw.rows) } : {}),
+      ...(rows ? { rows } : {}),
     };
     return field;
   }
